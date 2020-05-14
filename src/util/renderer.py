@@ -69,6 +69,16 @@ class Renderer:
 		parsed = injection_str.replace(containers[0],'').replace(containers[1],'').strip()
 
 		if '[[' in containers and ']]' in containers:
+			# handle page_meta defaulting
+			split_parsed = parsed.split('.')
+			if split_parsed[0] == 'page_meta' and not Settings.get_instance().has_prop(parsed):
+				print(f'\t\t\033[93mUsing default attributes for property: {parsed}\033[0m')
+				split_parsed[1] = 'default'
+				
+				parsed = ''
+				for i in range(len(split_parsed)):
+					parsed += f'{"." if i > 0 else ""}{split_parsed[i]}'
+
 			return Settings.get_instance().prop(parsed)
 		elif '{{' in containers and '}}' in containers:
 			return Injection.get_instance().exec_inj(parsed)
@@ -98,11 +108,14 @@ class Renderer:
 		''' gets the rendered html of each page and saves each file in dist '''
 		for page in pages:
 			new_html = ''
+			print(f'\n\tRendering "{page}"')
 
 			#  manage page name details for page_meta
 			page_name = page.split('.')[0]
 			if Settings.get_instance().has_prop(f'page_meta.{page_name}'):
 				self.__page_name = page_name
+			else:
+				self.__page_name = 'default'
 
 			# loop through the page and look for components to render
 			with open(self.__pages_path + page) as f:
@@ -111,6 +124,9 @@ class Renderer:
 
 			with open(f'{self.__dist_dir}{page}', 'w') as f:
 				f.write(new_html)
+
+			print('\t\t-- Done --')
+		print('')
 
 
 	def __manage_component(self, line):
@@ -134,10 +150,12 @@ class Renderer:
 		while '[[' in line and ']]' in line:
 			start = line.find('[[')
 			end = line.find(']]')+2
-			
-			# add the current page to the page_meta
 			line_replacement = line[start:end]
+
+			# add the current page to the page_meta if it exists
 			injection_str = line_replacement.replace('page_meta', f'page_meta.{self.__page_name}')
+
+			# update the line with the new parsed value
 			line = line.replace(line_replacement, str(self.__parse_value(injection_str, ('[[',']]'))))
 
 		while '{{' in line and '}}' in line:

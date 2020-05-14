@@ -11,6 +11,9 @@
 			"description": "My home page description",
 			"author": "Your Name",
 			"val": "4"
+		},
+		"page_one": {
+			"description": "Page one description"
 		}
 	},
 	"app_settings": {
