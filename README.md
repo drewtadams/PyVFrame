@@ -1,2 +1,2 @@
 # PyVFrame
-Framework built in python for easy vanilla web development
+Framework built in Python3 for easy vanilla web development
