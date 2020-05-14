@@ -1,0 +1,27 @@
+{
+	"page_meta": {
+		"default": {
+			"title": "My PyFrame Project",
+			"description": "My PyFrame Project description",
+			"author": "Your Name",
+			"val": "4"
+		},
+		"index": {
+			"title": "Home",
+			"description": "My home page description",
+			"author": "Your Name",
+			"val": "4"
+		}
+	},
+	"app_settings": {
+		"minify_js":	true,
+		"use_scss":		true,
+		"custom_modules": [
+			"src.util.inj.custom"
+		],
+		"tab": {
+			"width": 4,
+			"with_spaces": true
+		}
+	}
+}
