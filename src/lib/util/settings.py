@@ -15,7 +15,7 @@ class Settings:
 			Settings.__instance = self
 
 			sep = os.sep
-			settings_path = f'{os.getcwd()}{sep}src{sep}util{sep}settings.json'
+			settings_path = f'{os.getcwd()}{sep}src{sep}lib{sep}util{sep}settings.json'
 			with open(settings_path, 'r') as f:
 				Settings.__settings = json.loads(f.read())
 

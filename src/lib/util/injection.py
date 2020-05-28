@@ -1,6 +1,6 @@
 import sys
 import importlib as il
-from src.util.settings import *
+from src.lib.util.settings import *
 
 
 class Injection:

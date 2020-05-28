@@ -20,7 +20,7 @@
 		"minify_js":	true,
 		"use_scss":		true,
 		"custom_modules": [
-			"src.util.inj.custom"
+			"src.lib.util.inj.custom"
 		],
 		"tab": {
 			"width": 4,

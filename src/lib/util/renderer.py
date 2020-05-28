@@ -1,9 +1,10 @@
 import os
+import re
 import sass
 import shutil
 from jsmin import jsmin
-from src.util.injection import *
-from src.util.settings import *
+from src.lib.util.injection import *
+from src.lib.util.settings import *
 
 
 class Renderer:
@@ -16,6 +17,7 @@ class Renderer:
 
 		self.__page_name		= 'default';
 		self.__components_path	= f'{build}components{sep}'
+		self.__content_path		= f'{build}content{sep}'
 		self.__dist_css_path	= f'{dist}assets{sep}css{sep}'
 		self.__dist_dir			= f'{dist}'
 		self.__dist_js_path		= f'{dist}assets{sep}js{sep}'
@@ -84,14 +86,42 @@ class Renderer:
 			return Injection.get_instance().exec_inj(parsed)
 
 
+	def __render_content(self, content_name, component_html):
+		''' gets the rendered html of a specific component with the specified content '''
+		try:
+			with open(f'{self.__content_path}{content_name}.json', 'r') as f:
+				content_json = json.loads(f.read())
+
+				# go through the component's html and inject the appropriate content
+				return_html = ''
+				for line in component_html.splitlines():
+					while '((' in line and '))' in line:
+						start = line.find('((')
+						end = line.find('))')+2
+						attr_inj = line[start:end]
+
+						try:
+							content_attr = content_json[re.sub(r'\(\(|\)\)', '', attr_inj).strip()]
+							line = line.replace(attr_inj, content_attr)
+						except Exception as e:
+							print(f'\t\t\033[31mmissing content attribute from {content_name}.json: {e}\033[0m')
+							line = line.replace(attr_inj, re.sub(r'\(\(|\)\)', '**ERROR**', attr_inj))
+					return_html += line
+
+			return return_html
+		except Exception as e:
+			print(e)
+			return component_html
+
+
 	def __render_component(self, component_str):
 		''' gets the rendered html of a specific component '''
-		split_attr = component_str.replace('<pfcomponent','').replace('/>','').strip()
+		split_attr = component_str.replace('<pfcomponent','').replace('/>','').strip().split(' ')
 		attrs = {}
 
 		# break apart the component's attributes
 		for attr in split_attr:
-			split = split_attr.split('=')
+			split = attr.split('=')
 			attrs[split[0].strip()] = split[1].replace('"','').strip()
 
 		# 
@@ -100,6 +130,9 @@ class Renderer:
 			with open(f'{self.__components_path}{attrs["name"]}.html', 'r') as f:
 				for line in f:
 					return_str += self.__manage_component(line)
+
+		if 'content' in attrs:
+			return self.__render_content(attrs['content'], return_str)
 
 		return return_str
 
@@ -135,7 +168,6 @@ class Renderer:
 		component_name = '<pfcomponent'
 
 		if component_name in line:
-			# indentation = 
 			start = line.find(component_name)
 			end = line.find('/>', start+len(component_name))+2
 
@@ -145,7 +177,7 @@ class Renderer:
 		return line
 
 
-	def __manage_injection(self, line):
+	def __manage_injection(self, line, content=''):
 		''' checks if the line contains injected code and renders it '''
 		while '[[' in line and ']]' in line:
 			start = line.find('[[')

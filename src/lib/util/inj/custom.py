@@ -1,4 +1,4 @@
-from src.util.decorators import *
+from src.lib.util.decorators import *
 
 
 def do_something(*args):

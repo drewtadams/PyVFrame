@@ -1,6 +1,6 @@
 import sys
-import src.util.renderer as r
-import src.util.settings as s
+import src.lib.util.renderer as r
+import src.lib.util.settings as s
 
 
 def main():
