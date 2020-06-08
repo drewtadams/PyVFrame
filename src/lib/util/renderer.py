@@ -114,6 +114,27 @@ class Renderer:
 			return component_html
 
 
+	def __render_children(self, children_name):
+		''' gets the rendered html of the specified children component '''
+		try:
+			return_html = '<div class="children">'
+			with open(f'{self.__content_path}{children_name}.json', 'r') as f:
+				content_json = json.loads(f.read())
+
+				# start looping through the children
+				for child in content_json['children']:
+					return_html += f'<div class="{children_name} child">'
+
+					for k,v in child.items():
+						return_html += f'<span>{k}</span> <span>{v}</span>'
+
+					return_html += '</div>'
+			return return_html + '</div>'
+		except Exception as e:
+			print(e)
+			return f'<div>{e}</div>'
+
+
 	def __render_component(self, component_str):
 		''' gets the rendered html of a specific component '''
 		split_attr = component_str.replace('<pfcomponent','').replace('/>','').strip().split(' ')
@@ -124,15 +145,20 @@ class Renderer:
 			split = attr.split('=')
 			attrs[split[0].strip()] = split[1].replace('"','').strip()
 
-		# 
+		# look for general components
 		return_str = ''
 		if 'name' in attrs:
 			with open(f'{self.__components_path}{attrs["name"]}.html', 'r') as f:
 				for line in f:
 					return_str += self.__manage_component(line)
 
+		# look for content segments
 		if 'content' in attrs:
 			return self.__render_content(attrs['content'], return_str)
+
+		# look for repeated content segments
+		if 'children' in attrs:
+			return self.__render_children(attrs['children'])
 
 		return return_str
 
