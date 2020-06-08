@@ -125,8 +125,9 @@ class Renderer:
 				for child in content_json['children']:
 					return_html += f'<div class="{children_name} child">'
 
+					# add the values to the html with the class being the key
 					for k,v in child.items():
-						return_html += f'<span>{k}</span> <span>{v}</span>'
+						return_html += f'<span class="{k}">{v}</span>'
 
 					return_html += '</div>'
 			return return_html + '</div>'
