@@ -114,10 +114,19 @@ class Renderer:
 			return component_html
 
 
-	def __render_children(self, children_name):
+	def __render_loop(self, attrs):
 		''' gets the rendered html of the specified children component '''
 		try:
-			return_html = '<div class="children">'
+			children_name = attrs['pfFor']
+
+			# build the container for the looped elements
+			return_html = '<div '
+			for attr in attrs:
+				if not attr == 'pfFor':
+					print(f'{attr}="{attrs[attr]}"')
+					return_html += f'{attr}="{attrs[attr]}"'
+			return_html += '>'
+
 			with open(f'{self.__content_path}{children_name}.json', 'r') as f:
 				content_json = json.loads(f.read())
 
@@ -158,8 +167,8 @@ class Renderer:
 			return self.__render_content(attrs['content'], return_str)
 
 		# look for repeated content segments
-		if 'children' in attrs:
-			return self.__render_children(attrs['children'])
+		if 'pfFor' in attrs:
+			return self.__render_loop(attrs)
 
 		return return_str
 
