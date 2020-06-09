@@ -22,6 +22,11 @@
 		"custom_modules": [
 			"src.lib.util.inj.custom"
 		],
+		"logger": {
+			"info": true,
+			"warning": true,
+			"error": true
+		},
 		"tab": {
 			"width": 4,
 			"with_spaces": true

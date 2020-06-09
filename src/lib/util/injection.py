@@ -1,5 +1,6 @@
 import sys
 import importlib as il
+from src.lib.util.logger import *
 from src.lib.util.settings import *
 
 
@@ -53,5 +54,5 @@ class Injection:
 
 			return eval(func_str)
 		except Exception as e:
-			print(e)
+			Logger.error(e)
 			return str(e)
