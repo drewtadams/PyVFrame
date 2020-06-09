@@ -4,6 +4,7 @@ import sass
 import shutil
 from jsmin import jsmin
 from src.lib.util.injection import *
+from src.lib.util.logger import *
 from src.lib.util.settings import *
 
 
@@ -44,7 +45,8 @@ class Renderer:
 
 	def __render_scss(self):
 		''' compiles main.scss to main.css in dist  '''
-		sass.compile(dirname=(self.__scss_path, self.__dist_css_path), output_style='compressed')
+		if Settings.use_scss():
+			sass.compile(dirname=(self.__scss_path, self.__dist_css_path), output_style='compressed')
 
 
 	def __render_js(self):
@@ -74,7 +76,7 @@ class Renderer:
 			# handle page_meta defaulting
 			split_parsed = parsed.split('.')
 			if split_parsed[0] == 'page_meta' and not Settings.get_instance().has_prop(parsed):
-				print(f'\t\t\033[93mUsing default attributes for property: {parsed}\033[0m')
+				Logger.warning(f'\t\tUsing default attributes for property: {parsed}')
 				split_parsed[1] = 'default'
 				
 				parsed = ''
@@ -104,13 +106,13 @@ class Renderer:
 							content_attr = content_json[re.sub(r'\(\(|\)\)', '', attr_inj).strip()]
 							line = line.replace(attr_inj, content_attr)
 						except Exception as e:
-							print(f'\t\t\033[31mmissing content attribute from {content_name}.json: {e}\033[0m')
+							Logger.error(f'\t\tmissing content attribute from {content_name}.json: {e}')
 							line = line.replace(attr_inj, re.sub(r'\(\(|\)\)', '**ERROR**', attr_inj))
 					return_html += line
 
 			return return_html
 		except Exception as e:
-			print(e)
+			Logger.error(e)
 			return component_html
 
 
@@ -123,7 +125,6 @@ class Renderer:
 			return_html = '<div '
 			for attr in attrs:
 				if not attr == 'pfFor':
-					print(f'{attr}="{attrs[attr]}"')
 					return_html += f'{attr}="{attrs[attr]}"'
 			return_html += '>'
 
@@ -141,7 +142,7 @@ class Renderer:
 					return_html += '</div>'
 			return return_html + '</div>'
 		except Exception as e:
-			print(e)
+			Logger.error(e)
 			return f'<div>{e}</div>'
 
 
@@ -177,7 +178,7 @@ class Renderer:
 		''' gets the rendered html of each page and saves each file in dist '''
 		for page in pages:
 			new_html = ''
-			print(f'\n\tRendering "{page}"')
+			Logger.info(f'\n\tRendering "{page}"')
 
 			#  manage page name details for page_meta
 			page_name = page.split('.')[0]
@@ -194,8 +195,8 @@ class Renderer:
 			with open(f'{self.__dist_dir}{page}', 'w') as f:
 				f.write(new_html)
 
-			print('\t\t-- Done --')
-		print('')
+			Logger.info('\t\t-- Done --')
+		Logger.info('')
 
 
 	def __manage_component(self, line):
