@@ -24,13 +24,11 @@ class Settings:
 	@staticmethod
 	def render_path(path, *args):
 		''' replaces all forward separators in path with the os equivalent '''
-		# 
 		while '{' in path and '}' in path:
 			start = path.find('{')
 			end = path.find('}')+1
 			replacement = path[start:end]
 
-			# {buid}/assets
 			# get the path of the injected directory
 			prop = replacement[start+1:end-1]
 			# TODO: build out the json path for the directory with *args; e.g. app_settings
@@ -40,7 +38,6 @@ class Settings:
 				inj_path = Settings.prop(f'app_settings.{prop}')
 				path = path.replace(replacement, inj_path)
 			else:
-				# Logger.warning(f'\tPath for {prop} does not exist in settings.json - building path without path injection')
 				print(f'\tPath for "{prop}" does not exist in settings.json - building path without path injection')
 				path = path.replace(replacement, f'{os.sep}{prop}')
 
@@ -132,6 +129,12 @@ class Settings:
 	def minify_js():
 		''' getter for minify_js from settings.json '''
 		return Settings.__settings['app_settings']['minify_js']
+
+
+	@staticmethod
+	def minify_css():
+		''' . '''
+		return Settings.__settings['app_settings']['minify_css']
 
 
 	@staticmethod
