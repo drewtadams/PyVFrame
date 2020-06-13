@@ -267,12 +267,15 @@ class Renderer:
         component_name = '<pfcomponent'
 
         if component_name in line:
-            start = line.find(component_name)
-            end = line.find('/>', start+len(component_name))+2
+            if '/>' in line:
+                start = line.find(component_name)
+                end = line.find('/>', start+len(component_name))+2
 
-            component_str = line[start:end]
-            line = line.replace(component_str, self.__render_component(component_str))
-
+                component_str = line[start:end]
+                line = line.replace(component_str, self.__render_component(component_str))
+            else:
+                Logger.error(f'\t\tMissing tag terminator ("/>"): {line.strip()}')
+                line = ''
         return line
 
 
