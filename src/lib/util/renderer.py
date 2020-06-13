@@ -71,7 +71,7 @@ class Renderer:
                     with open(self.__css_path+file, 'r') as f:
                         min_name = file.replace('.css', '.min.css')
 
-                        with self.__write_file_path(self.__dist_css_path+file) as min_f:
+                        with self.__write_file_path(self.__dist_css_path+min_name) as min_f:
                             min_f.write(cssmin(f.read()))
                 else:
                     # copy js files over to the dist directory
@@ -97,7 +97,7 @@ class Renderer:
                     with open(self.__js_path+file, 'r') as f:
                         min_name = file.replace('.js', '.min.js')
 
-                        with self.__write_file_path(self.__dist_js_path+file) as min_f:
+                        with self.__write_file_path(self.__dist_js_path+min_name) as min_f:
                             min_f.write(jsmin(f.read()))
                 else:
                     # copy js files over to the dist directory
