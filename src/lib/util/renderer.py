@@ -13,7 +13,8 @@ class Renderer:
 	def __init__(self):
 		cwd = os.getcwd()
 		sep = os.sep
-		dist = f'{cwd}{sep}dist{sep}'
+		dist_path = Settings.get_instance().dist_dir().replace('/', sep)
+		dist = f'{cwd}{sep}{dist_path}{sep}'
 		build = f'{cwd}{sep}build{sep}'
 
 		self.__page_name		= 'default';

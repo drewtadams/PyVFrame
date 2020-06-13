@@ -17,8 +17,26 @@
 		}
 	},
 	"app_settings": {
-		"minify_js":	true,
-		"use_scss":		true,
+		"build_dir": "/build",
+		"components_dir": "{build_dir}/components",
+		"content_dir": "{build_dir}/content",
+		"dist_dir": "/dist",
+		"pages_dir": "{build_dir}/pages",
+		"css_dir": "{build_dir}/assets/css",
+		"scss_dir": "{build_dir}/assets/scss",
+		"js_dir": "{build_dir}/assets/js",
+		"images_dir": "{dist_dir}/assets/images",
+		"compiled_js_dir": "{dist_dir}/assets/js",
+		"compiled_css_dir": "{dist_dir}/assets/css",
+		"minify_js": true,
+		"use_scss": true,
+		"use_starter_files": true,
+		"starter_files": [
+			"{pages_dir}/index.html",
+			"{js_dir}/main.js",
+			"{css_dir}/main.css",
+			"{scss_dir}/main.scss"
+		],
 		"custom_modules": [
 			"src.lib.util.inj.custom"
 		],

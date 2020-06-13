@@ -7,10 +7,10 @@ class Logger:
 
 
     @staticmethod
-    def info(info_msg):
+    def info(info_msg, end='\n'):
         ''' prints the passed info_msg to the console if info logs are turned on '''
         if Settings.get_instance().prop(f'{Logger.__logger_root_setting}.info'):
-            print(info_msg)
+            print(info_msg, end=end)
 
 
     @staticmethod
@@ -25,3 +25,8 @@ class Logger:
         ''' prints the passed error_msg to the console if error logs are turned on '''
         if Settings.get_instance().prop(f'{Logger.__logger_root_setting}.error'):
             print(f'\033[31m{error_msg}\033[0m')
+
+
+    @staticmethod
+    def warning_input(msg):
+        return input(f'\033[93m{msg}\033[0m')
