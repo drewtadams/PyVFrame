@@ -1,0 +1,23 @@
+<!doctype html>
+
+<html lang="en">
+    <pfcomponent name="head" />
+
+    <body>
+        <pfcomponent name="header" />
+
+        <pfcomponent name="image" />
+
+        <div>the product of 4 x 4: {{ 4*4 }}</div>
+
+        <pfcomponent name="content_demo" content="demo" />
+
+        <pfcomponent pfFor="demo_children" id="myID" class="foobar" />
+
+        <hr>
+
+        <pfcomponent name="content_demo" content="demo2" />
+
+        <pfcomponent name="footer" />
+    </body>
+</html>

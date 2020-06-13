@@ -1,0 +1,29 @@
+@mixin border-radius($radius) {
+    -webkit-border-radius:	$radius;
+       -moz-border-radius:	$radius;
+        -ms-border-radius:	$radius;
+            border-radius:	$radius;
+}// end border-radius
+
+
+// @mixin media-query($width, $type: min) {
+//     @if map_has_key($breakpoints, $width) {
+//         $width: map_get($breakpoints, $width);
+
+//         @if $type == max {
+//             $width: $width - 1px
+//         }
+
+//         @media only screen and ({$type}-width: $width) {
+//             @content;
+//         }
+//     }
+// }// end media_query
+
+
+@mixin no-select {
+    -webkit-user-select:    none;
+       -moz-user-select:    none;
+        -ms-user-select:    none;
+            user-select:    none;
+}// end no-select
