@@ -1,35 +1,56 @@
 {
-	"page_meta": {
-		"default": {
-			"title": "My PyFrame Project",
-			"description": "My PyFrame Project description",
-			"author": "Your Name",
-			"val": "4"
-		},
-		"index": {
-			"title": "Home",
-			"description": "My home page description",
-			"author": "Your Name",
-			"val": "4"
-		},
-		"page_one": {
-			"description": "Page one description"
-		}
-	},
-	"app_settings": {
-		"minify_js":	true,
-		"use_scss":		true,
-		"custom_modules": [
-			"src.lib.util.inj.custom"
-		],
-		"logger": {
-			"info": true,
-			"warning": true,
-			"error": true
-		},
-		"tab": {
-			"width": 4,
-			"with_spaces": true
-		}
-	}
+    "page_meta": {
+        "default": {
+            "title": "My PyFrame Project",
+            "description": "My PyFrame Project description",
+            "author": "Your Name",
+            "val": "4"
+        },
+        "index": {
+            "title": "Home",
+            "description": "My home page description",
+            "author": "Your Name",
+            "val": "4"
+        },
+        "page_one": {
+            "description": "Page one description"
+        }
+    },
+    "app_settings": {
+        "build_dir": "/build",
+        "components_dir": "{build_dir}/components",
+        "content_dir": "{build_dir}/content",
+        "dist_dir": "/dist",
+        "pages_dir": "{build_dir}/pages",
+        "css_dir": "{build_dir}/assets/css",
+        "scss_dir": "{build_dir}/assets/scss",
+        "js_dir": "{build_dir}/assets/js",
+        "images_dir": "{build_dir}/assets/images",
+        "compiled_images_dir": "{dist_dir}/assets/images",
+        "compiled_js_dir": "{dist_dir}/assets/js",
+        "compiled_css_dir": "{dist_dir}/assets/css",
+        "minify_js": true,
+        "minify_css": true,
+        "use_scss": false,
+        "use_starter_files": true,
+        "use_symlinks": true,
+        "starter_files": [
+            "{pages_dir}/index.html",
+            "{js_dir}/main.js",
+            "{css_dir}/main.css",
+            "{scss_dir}/main.scss"
+        ],
+        "custom_modules": [
+            "src.lib.util.inj.custom"
+        ],
+        "logger": {
+            "info": true,
+            "warning": true,
+            "error": true
+        },
+        "tab": {
+            "width": 4,
+            "with_spaces": true
+        }
+    }
 }
