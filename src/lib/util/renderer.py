@@ -183,6 +183,12 @@ class Renderer:
         try:
             children_name = attrs['pfFor']
 
+            # add loop class
+            if 'class' in attrs:
+                attrs['class'] += f' {children_name} parent'
+            else:
+                attrs['class'] = f'{children_name}'
+
             # build the container for the looped elements
             return_html = '<div '
             for attr in attrs:
@@ -190,21 +196,48 @@ class Renderer:
                     return_html += f'{attr}="{attrs[attr]}"'
             return_html += '>'
 
+            # grab the children json
             with open(f'{self.__content_path}{children_name}.json', 'r') as f:
-                content_json = json.loads(f.read())
+                try:
+                    content_json = json.loads(f.read())
+                except Exception as e:
+                    raise Exception(f'Malformed JSON in {children_name}.json: {e}')
 
-                # start looping through the children
+            # start writing out the children
+            with open(f'{self.__components_path}{children_name}.html', 'r') as f:
                 for child in content_json['children']:
+                    # reset the read head
+                    f.seek(0)
+
+                    # build the child's container
                     return_html += f'<div class="{children_name} child">'
 
-                    # add the values to the html with the class being the key
-                    for k,v in child.items():
-                        return_html += f'<span class="{k}">{v}</span>'
+                    # loop through each line in the child html
+                    for line in f.readlines():
+                        # check for injection
+                        if not '((' in line and not '))' in line:
+                            return_html += line
+                        else:
+                            while '((' in line and '))' in line:
+                                start = line.find('((')
+                                end = line.find('))')+2
+                                attr_inj = line[start:end]
+
+                                try:
+                                    content_attr = child[re.sub(r'\(\(|\)\)', '', attr_inj).strip()]
+                                    line = line.replace(attr_inj, content_attr)
+                                except Exception as e:
+                                    Logger.error(f'\t\tmissing content attribute from {children_name}.json: {e}')
+                                    line = line.replace(attr_inj, re.sub(r'\(\(|\)\)', '**ERROR**', attr_inj))
+
+                                # print(f'line: {line}')
+                                return_html += line
 
                     return_html += '</div>'
+            # close the outer container div
             return return_html + '</div>'
         except Exception as e:
-            Logger.error(e)
+            Logger.error(f'\t\tError rendering children for {attrs["pfFor"]} component. {e}')
             return f'<div>{e}</div>'
 
 
