@@ -1,8 +1,6 @@
 # PyVFrame
 Framework built in Python3 for easy vanilla web development
 
-View on [github](https://github.com/drewtadams/PyVFrame)
-
 ## Installation
 From github:
 ```bash
@@ -44,7 +42,7 @@ function pyvframe () {
 }
 ```
 
-Then run `pyvframe` from where you want the repo cloned.
+Then run `pyvframe` from where you want the repo cloned. Once the repo is cloned, you can also initialize or build your project by running `pyvframe init` and `pyvframe build` from your project's root directory.
 
 ## Usage
 To initialize a new project from your project root:
