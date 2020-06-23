@@ -1,0 +1,22 @@
+{
+    "children": [
+        {
+            "name": "ref 1",
+            "position": "supervisor",
+            "email": "ref1@email.com",
+            "phone": "1234567890"
+        },
+        {
+            "name": "ref 2",
+            "position": "manager",
+            "email": "ref2@email.com",
+            "phone": "4567890123"
+        },
+        {
+            "name": "ref 3",
+            "position": "coworker",
+            "email": "ref3@email.com",
+            "phone": "7890123456"
+        }
+    ]
+}
