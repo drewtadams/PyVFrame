@@ -9,10 +9,42 @@ From github:
 git clone https://github.com/drewtadams/PyVFrame.git
 ```
 
-From pip:
+With bash:
+
+Add the following to your `bash_rc` or `bash_profile`:
 ```bash
-pip install PyVFrame
+function pyvframe () {
+    if [ $# -gt 0 ]
+    then
+        if [ $1 == 'init' ]
+        then
+            python3 pyvframe.py init
+        elif [ $1 == 'build' ]
+        then
+            python3 pyvframe.py build
+        else
+            echo $'\nInvalid parameters. Should be: pyvframe [ init | build ]'
+        fi
+    else
+        if [ -d "PyVFrame" ] || [ -f "pyvframe.py" ]
+        then
+            echo $'\nProject already exists here. Did you mean to use \033[1;35mpyvframe init\033[0m or \033[1;35mpyvframe build\033[0m?\n'
+        else
+            read -p $'\nDo you want to create a new project here? [y/n] : ' user_response
+
+            if [ $user_response == 'Y' ] || [ $user_response == 'y' ]
+            then
+                echo $'\n'
+                git clone https://github.com/drewtadams/PyVFrame.git
+                echo $'\n'
+                cd PyVFrame
+            fi
+        fi
+    fi
+}
 ```
+
+Then run `pyvframe` from where you want the repo cloned.
 
 ## Usage
 To initialize a new project from your project root:
