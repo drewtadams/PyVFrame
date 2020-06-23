@@ -199,14 +199,16 @@ Pages are your standard HTML pages, but with components and injection mixed in. 
 
 ### Components
 Generic component:
-* `name`
+* required attributes:
+  * `name`
 ```html
 <pfcomponent name="[component_name]" />
 ```
 
 Content block component:
-* `name`
-* `content`
+* required attributes:
+  * `name`
+  * `content`
 ```html
 <pfcomponent name="[component_name]" content="[content_block_name]" />
 ```
@@ -217,10 +219,15 @@ Content block component:
 ```
 
 Looping component:
-* `pfFor`
-* all properties attachable to div are optional
+* all properties attachable to a div are optional
+* the html component template and the json content MUST have the same name as the `pfFor` value (e.g. with `pfFor="faq"`, then you MUST have a file named `faq.json` in the content directory and a file named `faq.html` in the component directory)
+* required attributes:
+  * `pfFor`
 ```html
 <pfcomponent pfFor="[content_name]" />
+```
+```
+<p>data: (( some_key ))</p>
 ```
 ```json
 {
@@ -234,10 +241,6 @@ Looping component:
     ]
 }
 ```
-
-
-
-
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
