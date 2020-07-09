@@ -7,6 +7,12 @@ class Logger:
 
 
     @staticmethod
+    def data(data_msg):
+        ''' prints the passed message '''
+        print(f'\x1b[36m{data_msg}\033[0m')
+
+
+    @staticmethod
     def info(info_msg, end='\n'):
         ''' prints the passed info_msg to the console if info logs are turned on '''
         if Settings.get_instance().prop(f'{Logger.__logger_root_setting}.info'):
