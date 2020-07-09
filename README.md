@@ -1,18 +1,54 @@
 # PyVFrame
 Framework built in Python3 for easy vanilla web development
 
-View on [github](https://github.com/drewtadams/PyVFrame)
-
 ## Installation
 From github:
 ```bash
 git clone https://github.com/drewtadams/PyVFrame.git
 ```
 
-From pip:
+With bash:
+
+Add the following to your `bash_rc` or `bash_profile`:
 ```bash
-pip install PyVFrame
+function pyvframe () {
+    # check if a param was passed
+    if [ $# -gt 0 ]
+    then
+        if [ $1 == 'init' ]
+        then
+            python3 pyvframe.py init
+        elif [ $1 == 'build' ]
+        then
+            python3 pyvframe.py build
+        elif [ $1 == 'watch' ]
+        then
+            python3 pyvframe.py watch
+        else
+            echo $'\nInvalid parameters. Should be: pyvframe [ init | build | watch ]'
+        fi
+    else
+        # check if a project already exists
+        if [ -d "PyVFrame" ] || [ -f "pyvframe.py" ]
+        then
+            echo $'\nProject already exists here. Did you mean to use \033[1;35mpyvframe init\033[0m or \033[1;35mpyvframe build\033[0m?\n'
+        else
+            # verify the user wants to create a new project
+            read -p $'\nDo you want to create a new project here? [y/n] : ' user_response
+
+            if [ $user_response == 'Y' ] || [ $user_response == 'y' ]
+            then
+                echo $'\n'
+                git clone https://github.com/drewtadams/PyVFrame.git
+                echo $'\n'
+                cd PyVFrame
+            fi
+        fi
+    fi
+}
 ```
+
+Then run `pyvframe` from where you want the repo cloned. Once the repo is cloned, you can also initialize or build your project by running `pyvframe init` and `pyvframe build` from your project's root directory. Once you have a project initialized, you can also run `pyvframe build`
 
 ## Usage
 To initialize a new project from your project root:
@@ -169,14 +205,16 @@ Pages are your standard HTML pages, but with components and injection mixed in. 
 
 ### Components
 Generic component:
-* `name`
+* required attributes:
+  * `name`
 ```html
 <pfcomponent name="[component_name]" />
 ```
 
 Content block component:
-* `name`
-* `content`
+* required attributes:
+  * `name`
+  * `content`
 ```html
 <pfcomponent name="[component_name]" content="[content_block_name]" />
 ```
@@ -187,10 +225,15 @@ Content block component:
 ```
 
 Looping component:
-* `pfFor`
-* all properties attachable to div are optional
+* all properties attachable to a div are optional
+* the html component template and the json content MUST have the same name as the `pfFor` value (e.g. with `pfFor="faq"`, then you MUST have a file named `faq.json` in the content directory and a file named `faq.html` in the component directory)
+* required attributes:
+  * `pfFor`
 ```html
 <pfcomponent pfFor="[content_name]" />
+```
+```
+<p>data: (( some_key ))</p>
 ```
 ```json
 {
@@ -204,10 +247,6 @@ Looping component:
     ]
 }
 ```
-
-
-
-
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
