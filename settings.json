@@ -16,7 +16,7 @@
         }
     },
     "app_settings": {
-        "build_dir": "/build",
+        "build_dir": "/sample_build",
         "components_dir": "{build_dir}/components",
         "content_dir": "{build_dir}/content",
         "dist_dir": "/dist",
@@ -50,6 +50,13 @@
         "tab": {
             "width": 4,
             "with_spaces": true
-        }
+        },
+        "watch": [
+            "{build_dir}/assets/js",
+            "{build_dir}/assets/scss",
+            "{build_dir}/components",
+            "{build_dir}/content",
+            "{build_dir}/pages" 
+        ]
     }
 }

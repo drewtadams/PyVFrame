@@ -43,13 +43,14 @@ class Renderer:
         self.__render_pages(pages)
         self.__render_js()
 
-        if Settings.get_instance().use_scss():
+        settings = Settings.get_instance()
+        if settings.use_scss():
             self.__render_scss()
         else:
             self.__render_css()
 
         # create general symlinks
-        if Settings.get_instance().prop('app_settings.use_symlinks'):
+        if settings.prop('app_settings.use_symlinks'):
             self.__generate_symlinks()
 
 
@@ -62,51 +63,38 @@ class Renderer:
     def __render_css(self):
         ''' writes css files to dist '''
         should_minify = Settings.get_instance().minify_css()
-
-        for file in os.listdir(self.__css_path):
-            # make sure the file is a css file
-            if os.path.isfile(self.__css_path+file) and file.endswith('.css'):
-                # check if we need to minify css files
-                if should_minify and '.min.' not in file:
-                    with open(self.__css_path+file, 'r') as f:
-                        min_name = file.replace('.css', '.min.css')
-
-                        with self.__write_file_path(self.__dist_css_path+min_name) as min_f:
-                            min_f.write(cssmin(f.read()))
-                else:
-                    # copy js files over to the dist directory
-                    shutil.copy(self.__css_path+file, self.__dist_css_path+file)
-            elif os.path.isdir(self.__css_path+file):
-                if Settings.get_instance().prop('app_settings.use_symlinks'):
-                    try:
-                        # create symlink of the directory
-                        os.symlink(self.__css_path+file, self.__dist_css_path+file)
-                    except Exception as e:
-                        pass # the symlink already exists
+        self.__js_css_render(should_minify, self.__css_path, self.__dist_css_path, '.css')
 
 
     def __render_js(self):
         ''' writes js files to dist '''
         should_minify = Settings.get_instance().minify_js()
+        self.__js_css_render(should_minify, self.__js_path, self.__dist_js_path, '.js')
 
-        for file in os.listdir(self.__js_path):
-            # make sure the file is a js file
-            if os.path.isfile(self.__js_path+file) and file.endswith('.js'):
-                # check if we need to minify js files
+
+    def __js_css_render(self, should_minify, path, dist_path, extension):
+        ''' . '''
+        for file in os.listdir(path):
+            # 
+            if os.path.isfile(path+file) and file.endswith(extension):
+                # 
                 if should_minify and '.min.' not in file:
-                    with open(self.__js_path+file, 'r') as f:
-                        min_name = file.replace('.js', '.min.js')
+                    with open(path+file, 'r') as f:
+                        min_name = file.replace(extension, '.min'+extension)
 
-                        with self.__write_file_path(self.__dist_js_path+min_name) as min_f:
-                            min_f.write(jsmin(f.read()))
+                        with self.__write_file_path(dist_path+min_name) as min_f:
+                            if extension == '.js':
+                                min_f.write(jsmin(f.read()))
+                            elif extension == '.css':
+                                min_f.write(cssmin(f.read()))
                 else:
-                    # copy js files over to the dist directory
-                    shutil.copy(self.__js_path+file, self.__dist_js_path+file)
-            elif os.path.isdir(self.__js_path+file):
+                    # 
+                    shutil.copy(path+file, dist_path+file)
+            elif os.path.isdir(path+file):
                 if Settings.get_instance().prop('app_settings.use_symlinks'):
                     try:
                         # create symlink of the directory
-                        os.symlink(self.__js_path+file, self.__dist_js_path+file)
+                        os.symlink(path+file, dist_path+file)
                     except Exception as e:
                         pass # the symlink already exists
 
