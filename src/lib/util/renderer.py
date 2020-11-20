@@ -5,6 +5,7 @@ import sass
 import shutil
 from cssmin import cssmin
 from jsmin import jsmin
+from pathlib import Path
 from src.lib.util.injection import *
 from src.lib.util.logger import *
 from src.lib.util.settings import *
@@ -53,6 +54,11 @@ class Renderer:
         if settings.prop('app_settings.use_symlinks'):
             self.__generate_symlinks()
 
+        # check if creating a pwa
+        if(settings.prop('app_settings.is_pwa')):
+            self.__page_name = 'default'
+            self.__build_pwa()
+
 
     def __render_scss(self):
         ''' compiles main.scss to main.css in dist  '''
@@ -73,7 +79,7 @@ class Renderer:
 
 
     def __js_css_render(self, should_minify, path, dist_path, extension):
-        ''' . '''
+        ''' renders the js and css in either min or normal files '''
         for file in os.listdir(path):
             # 
             if os.path.isfile(path+file) and file.endswith(extension):
@@ -116,6 +122,26 @@ class Renderer:
                 os.symlink(src, dest)
             except Exception as e:
                 pass # the symlink already exists
+
+
+    def __build_pwa(self):
+        ''' . '''
+        settings = Settings.get_instance()
+        cwd = os.getcwd()
+        content_dir = cwd + settings.build_dir() + '/content'
+        dist_manifest_path = cwd + settings.dist_dir() + '/manifest.json'
+
+        # check if a manifest file exists in the build content directory
+        manifest_path = f'{content_dir}/manifest.json'
+        if not os.path.isfile(manifest_path):
+            Logger.warning(f'\tMissing pwa manifest.json file in {content_dir}\n')
+        else:
+            root_manifest_json = ''
+            with open(manifest_path, 'r') as mf:
+                for line in mf.readlines():
+                    root_manifest_json += self.__manage_injection(line)
+            with open(dist_manifest_path, 'w') as dmf:
+                dmf.write(root_manifest_json)
 
 
     def __parse_value(self, injection_str, containers):
@@ -173,7 +199,7 @@ class Renderer:
 
             # add loop class
             if 'class' in attrs:
-                attrs['class'] += f' {children_name} parent'
+                attrs['class'] += f' {children_name}-parent'
             else:
                 attrs['class'] = f'{children_name}'
 
@@ -198,7 +224,7 @@ class Renderer:
                     f.seek(0)
 
                     # build the child's container
-                    return_html += f'<div class="{children_name} child">'
+                    return_html += f'<div class="{children_name}-child">'
 
                     # loop through each line in the child html
                     for line in f.readlines():

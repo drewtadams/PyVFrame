@@ -42,6 +42,6 @@ class Watcher:
 
     class WatchHandler(FileSystemEventHandler): 
         def on_modified(self, event):
-            Logger.data(f'\tChange to {event.src_path}')
+            Logger.data(f'\tChange detected in {event.src_path}')
             r.Renderer().render()
 

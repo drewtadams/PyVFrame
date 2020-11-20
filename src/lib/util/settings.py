@@ -120,6 +120,12 @@ class Settings:
 
 
 	@staticmethod
+	def build_dir():
+		''' getter for the build directory root '''
+		return Settings.render_path(Settings.__settings['app_settings']['build_dir'])
+
+
+	@staticmethod
 	def dist_dir():
 		''' getter for the dist directory root '''
 		return Settings.render_path(Settings.__settings['app_settings']['dist_dir'])
