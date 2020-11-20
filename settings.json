@@ -25,6 +25,7 @@
         "scss_dir": "{build_dir}/assets/scss",
         "js_dir": "{build_dir}/assets/js",
         "images_dir": "{build_dir}/assets/images",
+        "is_pwa": false,
         "compiled_images_dir": "{dist_dir}/assets/images",
         "compiled_js_dir": "{dist_dir}/assets/js",
         "compiled_css_dir": "{dist_dir}/assets/css",
